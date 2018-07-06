@@ -8,7 +8,7 @@
 
 ## Description
 
-The arcade game is a project part of my Udacity FEND Nano Degree. It is a complete browser-based arcade game (also know as Frogger).
+The arcade game is a project part of my Udacity FEND Nano Degree. It is a browser-based classic arcade game (also know as Frogger).
 
 The project rubric is available here:
 [ Arcade Game project rubric](https://review.udacity.com/#!/rubrics/15/view).
@@ -20,7 +20,7 @@ To run the game: open the `index.html` file on your browser;
 To play the game:
 
 - use the left, right, up and down keys to move the player towards the water, avoiding the collisions with the enemies.
-for each complete run you receive 100 points.
+- for each complete run you receive 100 points.
 - after each complete run, the difficulty increases: there are more enemies running at higher speeds.
 - the goal is to beat your best score.
 
