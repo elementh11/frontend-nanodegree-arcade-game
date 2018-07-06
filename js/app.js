@@ -13,6 +13,8 @@ class Enemy {
     this.speed = speed;
   }
 
+//this.speed = Math.floor((Math.random()*3))*80 + 55;
+//this.speed = Math.floor((Math.random()*10))*10 + 100;
   // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
   update(dt) {
@@ -49,7 +51,7 @@ class Player {
     if (player.y == -25) {
         player.x = 202;
         player.y = 375;
-      win();
+      handleWin();
     }
   }
 
@@ -75,18 +77,9 @@ class Player {
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
-const bug1 = new Enemy(-150, 215, 100)
-const bug2 = new Enemy(-200, 55, 150);
-const bug3 = new Enemy(-320, 135, 125);
-const bug4 = new Enemy(-300, 55, 50);
-const bug5 = new Enemy(-100, 135, 120);
-const bug6 = new Enemy(-220, 215, 230);
-const bug7 = new Enemy(-150, 215, 120);
-const bug8 = new Enemy(-150, 55, 120);
-const bug9 = new Enemy(-150, 135, 200);
-const bug10 = new Enemy(-150, 215, 220);
-
-let allEnemies = [bug1, bug2, bug3];
+let allEnemies = [];
+allEnemies.push(new Enemy(-150, Math.floor((Math.random()*3))*80 + 55, 100));
+allEnemies.push(new Enemy(-200, Math.floor((Math.random()*3))*80 + 55, 150));
 
 // Place the player object in a variable called player
 const player =  new Player(202, 375);
@@ -111,13 +104,14 @@ function handleCollision() {
         player.y = 375;
         updateScores();
         score = 0;
-        displayScore.innerText = 'Score: ' + score;
+        displayScore.innerText = 'Current Score: ' + score;
         let speedChange = runs * 10;
-        allEnemies.forEach(function(bug) {
-          bug.speed -= speedChange;
-          bug.x = -200;
+        allEnemies.forEach(function(enemy) {
+          enemy.speed -= speedChange;
+          enemy.x = -200;
         })
-        allEnemies = [bug1, bug2, bug3];
+        // allEnemies.push(new Enemy(-150, Math.floor((Math.random()*3))*80 + 55, 100));
+        // allEnemies.push(new Enemy(-200, Math.floor((Math.random()*3))*80 + 55, 150));
         runs = 0;
         allSpecialItems = [];
     }
@@ -127,16 +121,19 @@ function handleCollision() {
 // Add score to game
 // Variables to access Scores
 let displayScore = document.querySelector('.score');
+let displayLevel = document.querySelector('.level');
 let score = 0;
 let runs = 0;
-displayScore.innerText = 'Score: ' + score;
-let lastScore = document.querySelector('.last-score');
+let level = 0;
+displayScore.innerText = 'Current Score: ' + score;
+displayLevel.innerText = 'Runs Completed: ' + level;
+//let lastScore = document.querySelector('.last-score');
 let displayBestScore = document.querySelector('.best-score');
 let bestScore = 0;
 
 // Hold top score for session
 function updateScores() {
-  lastScore.innerText = 'Last score: ' + score;
+//  lastScore.innerText = 'Previous Score: ' + score;
   if (score > bestScore) {
     bestScore = score;
     displayBestScore.innerText = 'Best Score: ' + bestScore;
@@ -145,47 +142,55 @@ function updateScores() {
 
 // Update score on player win and increase difficulty
 // Adds special items based on number of successful runs
-function win() {
-  score += 1000;
-  displayScore.innerText = 'Score: ' + score;
+function handleWin() {
+  score += 100;
+  level += 1;
+  displayScore.innerText = 'Current Score: ' + score;
+  displayLevel.innerText = 'Runs Completed: ' + level;
   runs += 1;
   //speed up bugs and add special items
-  allEnemies.forEach(function(bug){
-    bug.speed += 10;
+  allEnemies.forEach(function(enemy){
+    enemy.speed += 10;
   });
   if (runs == 1){
-    allEnemies.push(bug3);
+    allEnemies.push(new Enemy(
+      -Math.floor((Math.random()*10))*10 - 100,
+      Math.floor((Math.random()*3))*80 + 55,
+      Math.floor((Math.random()*10))*10 + 100));
   }
   if (runs == 2){
-    allEnemies.push(bug4);
+    allEnemies.push(new Enemy(
+      -Math.floor((Math.random()*10))*10 - 100,
+      Math.floor((Math.random()*3))*80 + 55,
+      Math.floor((Math.random()*10))*10 + 100));
     allSpecialItems.push(blueGem);
   }
-  if (runs == 3){
-    allEnemies.push(bug5);
-  }
   if (runs == 4){
-    allEnemies.push(bug6);
+    allEnemies.push(new Enemy(
+      -Math.floor((Math.random()*10))*10 - 100,
+      Math.floor((Math.random()*3))*80 + 55,
+      Math.floor((Math.random()*10))*10 + 100));
     allSpecialItems.push(greenGem);
   }
-  if (runs == 5){
-    allEnemies.push(bug7);
-  }
   if (runs == 6){
-    allEnemies.push(bug8);
+    allEnemies.push(new Enemy(
+      -Math.floor((Math.random()*10))*10 - 100,
+      Math.floor((Math.random()*3))*80 + 55,
+      Math.floor((Math.random()*10))*10 + 100));
     allSpecialItems.push(orangeGem);
   }
-  if (runs == 7){
-    allEnemies.push(bug8);
-  }
   if (runs == 8){
-    allEnemies.push(bug8);
+    allEnemies.push(new Enemy(
+      -Math.floor((Math.random()*10))*10 - 100,
+      Math.floor((Math.random()*3))*80 + 55,
+      Math.floor((Math.random()*10))*10 + 100));
     allSpecialItems.push(goldKey);
   }
-  if (runs == 9){
-    allEnemies.push(bug9);
-  }
   if (runs == 10){
-      allEnemies.push(bug10);
+    allEnemies.push(new Enemy(
+      -Math.floor((Math.random()*10))*10 - 100,
+      Math.floor((Math.random()*3))*80 + 55,
+      Math.floor((Math.random()*10))*10 + 100));
       allSpecialItems.push(star);
     }
 }
@@ -206,13 +211,13 @@ class SpecialItem {
 
 // Instantiate special items
 // Add special items to array
-const blueGem = new SpecialItem('images/Gem-Blue.png', 101, 215, 200);
+const blueGem = new SpecialItem('images/char-cat-girl.png', 101, 215, 200);
 const greenGem = new SpecialItem('images/Gem-Green.png', 404, 55, 400);
 const orangeGem = new SpecialItem('images/Gem-Orange.png', 202, 135, 600);
 const goldKey = new SpecialItem('images/Key.png', 404, 215, 1000);
 const star = new SpecialItem('images/Star.png', 0, 55, 5000);
 
-let allSpecialItems = [];
+let allSpecialItems = [blueGem];
 
 // Collect special item - add points and remove from board
 function collectItem(){
