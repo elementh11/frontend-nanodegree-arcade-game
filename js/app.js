@@ -13,8 +13,6 @@ class Enemy {
     this.speed = speed;
   }
 
-//this.speed = Math.floor((Math.random()*3))*80 + 55;
-//this.speed = Math.floor((Math.random()*10))*10 + 100;
   // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
   update(dt) {
@@ -26,6 +24,7 @@ class Enemy {
     } else {
       this.x = -200;
     }
+    // Handle player - enemy collision
     handleCollision();
   }
 
@@ -33,7 +32,7 @@ class Enemy {
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
-};
+}
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -44,17 +43,14 @@ class Player {
     this.x = x;
     this.y = y;
   }
-
   update(dt) {
-    // Reset player on win
-    collectItem();
+    // Reset player position and handle a complete run
     if (player.y == -25) {
         player.x = 202;
         player.y = 375;
       handleWin();
     }
   }
-
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
@@ -93,13 +89,13 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
 function handleCollision() {
-  allEnemies.forEach(function(bug){
-    if (player.y == bug.y && bug.x > (player.x - 50) && bug.x < (player.x + 50)) {
+  // Reset the game, update the score, and decrease the enemy speed
+  allEnemies.forEach(function(enemy){
+    if (player.y == enemy.y && enemy.x > (player.x - 50) && enemy.x < (player.x + 50)) {
         player.x = 202;
         player.y = 375;
         updateScores();
@@ -110,48 +106,43 @@ function handleCollision() {
           enemy.speed -= speedChange;
           enemy.x = -200;
         })
-        // allEnemies.push(new Enemy(-150, Math.floor((Math.random()*3))*80 + 55, 100));
-        // allEnemies.push(new Enemy(-200, Math.floor((Math.random()*3))*80 + 55, 150));
         runs = 0;
-        allSpecialItems = [];
     }
   })
 }
 
-// Add score to game
-// Variables to access Scores
+// Add game statistics
 let displayScore = document.querySelector('.score');
 let displayLevel = document.querySelector('.level');
+let displayBestScore = document.querySelector('.best-score');
 let score = 0;
 let runs = 0;
 let level = 0;
+let bestScore = 0;
 displayScore.innerText = 'Current Score: ' + score;
 displayLevel.innerText = 'Runs Completed: ' + level;
-//let lastScore = document.querySelector('.last-score');
-let displayBestScore = document.querySelector('.best-score');
-let bestScore = 0;
 
-// Hold top score for session
 function updateScores() {
-//  lastScore.innerText = 'Previous Score: ' + score;
   if (score > bestScore) {
     bestScore = score;
     displayBestScore.innerText = 'Best Score: ' + bestScore;
   }
 }
 
-// Update score on player win and increase difficulty
-// Adds special items based on number of successful runs
+// Handles a complete run
 function handleWin() {
+  // update the scores
   score += 100;
   level += 1;
   displayScore.innerText = 'Current Score: ' + score;
   displayLevel.innerText = 'Runs Completed: ' + level;
   runs += 1;
-  //speed up bugs and add special items
+  // increase enemy speed
   allEnemies.forEach(function(enemy){
     enemy.speed += 10;
   });
+  // add more enemies to the array
+  // with random velocity and x, y coordinates
   if (runs == 1){
     allEnemies.push(new Enemy(
       -Math.floor((Math.random()*10))*10 - 100,
@@ -163,69 +154,29 @@ function handleWin() {
       -Math.floor((Math.random()*10))*10 - 100,
       Math.floor((Math.random()*3))*80 + 55,
       Math.floor((Math.random()*10))*10 + 100));
-    allSpecialItems.push(blueGem);
   }
   if (runs == 4){
     allEnemies.push(new Enemy(
       -Math.floor((Math.random()*10))*10 - 100,
       Math.floor((Math.random()*3))*80 + 55,
       Math.floor((Math.random()*10))*10 + 100));
-    allSpecialItems.push(greenGem);
   }
   if (runs == 6){
     allEnemies.push(new Enemy(
       -Math.floor((Math.random()*10))*10 - 100,
       Math.floor((Math.random()*3))*80 + 55,
       Math.floor((Math.random()*10))*10 + 100));
-    allSpecialItems.push(orangeGem);
   }
   if (runs == 8){
     allEnemies.push(new Enemy(
       -Math.floor((Math.random()*10))*10 - 100,
       Math.floor((Math.random()*3))*80 + 55,
       Math.floor((Math.random()*10))*10 + 100));
-    allSpecialItems.push(goldKey);
   }
   if (runs == 10){
     allEnemies.push(new Enemy(
       -Math.floor((Math.random()*10))*10 - 100,
       Math.floor((Math.random()*3))*80 + 55,
       Math.floor((Math.random()*10))*10 + 100));
-      allSpecialItems.push(star);
     }
-}
-
-// Add class for special collectible items
-class SpecialItem {
-  constructor(sprite, x, y, value) {
-    this.sprite = sprite;
-    this.x = x;
-    this.y = y;
-    this.value = value;
-  }
-
-  render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-  }
-}
-
-// Instantiate special items
-// Add special items to array
-const blueGem = new SpecialItem('images/char-cat-girl.png', 101, 215, 200);
-const greenGem = new SpecialItem('images/Gem-Green.png', 404, 55, 400);
-const orangeGem = new SpecialItem('images/Gem-Orange.png', 202, 135, 600);
-const goldKey = new SpecialItem('images/Key.png', 404, 215, 1000);
-const star = new SpecialItem('images/Star.png', 0, 55, 5000);
-
-let allSpecialItems = [blueGem];
-
-// Collect special item - add points and remove from board
-function collectItem(){
-  allSpecialItems.forEach(function(item){
-    if (player.x == item.x && player.y == item.y){
-      score += item.value;
-      displayScore.innerText = 'Score: ' + score;
-      allSpecialItems.pop();
-    }
-  })
 }
