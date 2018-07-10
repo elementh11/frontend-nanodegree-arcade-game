@@ -16,8 +16,7 @@ The project rubric is available here:
 ## Instructions
 
 To run the game: open the `index.html` file on your browser; you can also find a live hosted version here:
-[ Arcade Game] (https://elementh11.github.io/frontend-nanodegree-arcade-game/)
-
+[ Arcade Game ](https://elementh11.github.io/frontend-nanodegree-arcade-game).
 To play the game:
 
 - use the left, right, up and down keys to move the player towards the water, avoiding the collisions with the enemies.
