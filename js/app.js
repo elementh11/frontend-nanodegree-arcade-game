@@ -24,8 +24,6 @@ class Enemy {
     } else {
       this.x = -200;
     }
-    // Handle player - enemy collision
-    handleCollision();
   }
 
 // Draw the enemy on the screen, required method for game
@@ -43,30 +41,33 @@ class Player {
     this.x = x;
     this.y = y;
   }
+
   update(dt) {
     // Reset player position and handle a complete run
-    if (player.y == -25) {
-        player.x = 202;
-        player.y = 375;
+    if (this.y == -25) {
+        this.x = 202;
+        this.y = 375;
       handleWin();
     }
+    handleCollision();
   }
+
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
 
   handleInput(allowedKeys) {
-    if (allowedKeys == 'left' && player.x > 0) {
-      player.x -= 101;
+    if (allowedKeys == 'left' && this.x > 0) {
+      this.x -= 101;
     }
-    if (allowedKeys == 'up' && player.y > 0) {
-      player.y -= 80;
+    if (allowedKeys == 'up' && this.y > 0) {
+      this.y -= 80;
     }
-    if (allowedKeys == 'right' && player.x < 404) {
-      player.x += 101;
+    if (allowedKeys == 'right' && this.x < 404) {
+      this.x += 101;
     }
-    if (allowedKeys == 'down' && player.y < 375) {
-      player.y += 80;
+    if (allowedKeys == 'down' && this.y < 375) {
+      this.y += 80;
     }
   }
 }
@@ -101,14 +102,11 @@ function handleCollision() {
         updateScores();
         score = 0;
         displayScore.innerText = 'Current Score: ' + score;
-        let speedChange = runs * 10;
-        allEnemies.forEach(function(enemy) {
-          enemy.speed -= speedChange;
-          enemy.x = -200;
-        })
+        enemy.speed -= runs * 10;
+        enemy.x = -200;
         runs = 0;
     }
-  })
+  });
 }
 
 // Add game statistics
